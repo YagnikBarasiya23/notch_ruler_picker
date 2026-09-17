@@ -1,0 +1,25 @@
+name: notch_ruler_picker
+description: "A scrollable ruler picker for Flutter: snapping ticks, haptic feedback, a centre notch that bumps as values pass, and keyboard and screen reader support."
+version: 1.0.0
+homepage: https://yagnikbarasiya23.github.io/notch_ruler_picker/
+repository: https://github.com/YagnikBarasiya23/notch_ruler_picker
+issue_tracker: https://github.com/YagnikBarasiya23/notch_ruler_picker/issues
+topics: [picker, ruler, slider, widget, ui]
+screenshots:
+  - description: "Height and weight rulers in the demo app"
+    path: screenshots/notch.jpg
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:

@@ -1,0 +1,5 @@
+package dev.yagnikbarasiya.notch_ruler_picker_example
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
