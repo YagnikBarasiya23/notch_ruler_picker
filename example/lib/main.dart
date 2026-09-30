@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notch_ruler_picker/notch_ruler_picker.dart';
 
+import 'controls.dart';
+
 void main() => runApp(const NotchDemo());
 
 const _bg = Color(0xFF050505);
@@ -20,12 +22,7 @@ class NotchDemo extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: _bg,
-        colorScheme: const ColorScheme.dark(
-          primary: _accent,
-          surface: _panel,
-          secondaryContainer: _accent,
-          onSecondaryContainer: Colors.black,
-        ),
+        colorScheme: const ColorScheme.dark(primary: _accent, surface: _panel),
       ),
       home: const DemoPage(),
     );
@@ -47,7 +44,8 @@ class _DemoPageState extends State<DemoPage> {
 
   // Imperial height is picked in whole inches; metric in centimetres.
   double get _heightValue => _imperialHeight ? (_heightCm / 2.54).roundToDouble() : _heightCm;
-  double get _weightValue => _imperialWeight ? double.parse(RulerUnits.kgToLb(_weightKg).toStringAsFixed(0)) : _weightKg;
+  double get _weightValue =>
+      _imperialWeight ? double.parse(RulerUnits.kgToLb(_weightKg).toStringAsFixed(0)) : _weightKg;
 
   String get _heightText {
     if (!_imperialHeight) return '${_heightCm.round()} cm';
@@ -61,9 +59,10 @@ class _DemoPageState extends State<DemoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 28, 20, 40),
+            padding: EdgeInsets.fromLTRB(20, 28, 20, 40 + MediaQuery.paddingOf(context).bottom),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 720),
               child: Column(
@@ -71,7 +70,12 @@ class _DemoPageState extends State<DemoPage> {
                 children: [
                   const Text(
                     'NOTCH · FLUTTER',
-                    style: TextStyle(color: Color(0xFF71717A), letterSpacing: 3.5, fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: Color(0xFF71717A),
+                      letterSpacing: 3.5,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   const Text(
@@ -128,7 +132,8 @@ class _DemoPageState extends State<DemoPage> {
                       midEvery: 5,
                       labelBuilder: _imperialWeight ? null : (v) => v.round().toString(),
                       semanticLabel: 'Weight',
-                      semanticValueBuilder: (v) => _imperialWeight ? '${v.round()} pounds' : '${v.toStringAsFixed(1)} kilograms',
+                      semanticValueBuilder: (v) =>
+                          _imperialWeight ? '${v.round()} pounds' : '${v.toStringAsFixed(1)} kilograms',
                       onChanged: (v) => setState(() => _weightKg = _imperialWeight ? RulerUnits.lbToKg(v) : v),
                     ),
                     presets: [
@@ -138,9 +143,13 @@ class _DemoPageState extends State<DemoPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'MIT © 2026 Yagnik Barasiya · github.com/YagnikBarasiya23/notch_ruler_picker',
-                    style: TextStyle(color: _muted, fontSize: 13),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      'MIT © 2026 Yagnik Barasiya · github.com/YagnikBarasiya23/notch_ruler_picker',
+                      style: TextStyle(color: _muted, fontSize: 13),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
@@ -192,15 +201,7 @@ class _Card extends StatelessWidget {
                     style: const TextStyle(color: _muted, fontWeight: FontWeight.w600),
                   ),
                 ),
-                SegmentedButton<bool>(
-                  segments: [
-                    ButtonSegment(value: false, label: Text(units[0])),
-                    ButtonSegment(value: true, label: Text(units[1])),
-                  ],
-                  selected: {imperial},
-                  showSelectedIcon: false,
-                  onSelectionChanged: (s) => onUnits(s.first),
-                ),
+                Segmented<bool>(segments: {false: units[0], true: units[1]}, selected: imperial, onChanged: onUnits),
               ],
             ),
           ),
@@ -219,18 +220,9 @@ class _Card extends StatelessWidget {
           const SizedBox(height: 14),
           Wrap(
             spacing: 8,
-            children: [
-              for (final (label, onTap) in presets)
-                OutlinedButton(
-                  onPressed: onTap,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Color(0x38FFFFFF)),
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Text(label),
-                ),
-            ],
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [for (final (label, onTap) in presets) PillButton(label: label, onPressed: onTap)],
           ),
         ],
       ),
